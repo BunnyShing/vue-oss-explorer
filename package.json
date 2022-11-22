@@ -1,0 +1,39 @@
+{
+  "name": "vue-oss-explorer",
+  "description": "基于Vue + ElementUI的OSS Web文件管理器Vue组件",
+  "keywords": [
+    "vue",
+    "oss",
+    "upload",
+    "explorer",
+    "element-ui"
+  ],
+  "version": "1.0.2",
+  "author": "hejincheng<335836557@qq.com>",
+  "license": "MIT",
+  "private": false,
+  "main": "vue-oss-explorer.js",
+  "homepage": "https://github.com/BunnyShing/vue-oss-explorer",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BunnyShing/vue-oss-explorer.git"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173"
+  },
+  "dependencies": {
+    "ali-oss": "^6.17.1",
+    "element-ui": "^2.15.12",
+    "node-sass": "^8.0.0",
+    "vue": "^2.7.7"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-legacy": "^2.0.0",
+    "@vitejs/plugin-vue2": "^1.1.2",
+    "sass": "^1.56.1",
+    "terser": "^5.14.2",
+    "vite": "^3.0.2"
+  }
+}
