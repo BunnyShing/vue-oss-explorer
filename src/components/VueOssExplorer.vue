@@ -282,8 +282,8 @@
           progress: (p, cpt) => {
             if (p >= 1) {
               if (name.startsWith(this.path)) {
-                let newObjectName = this.path + name.replace(this.path,'').split('/')[0]
-                newObjectName = newObjectName.indexOf('.') === -1 ? newObjectName + '/' : ''
+                let newObjectName = this.path + name.replace(this.path,'').split('/')[0];
+                newObjectName += newObjectName.indexOf('.') === -1 ? '/' : '';
                 if(this.list.findIndex(v => v.name === newObjectName) === -1){
                   this.list.unshift({name: newObjectName, size: newObjectName.indexOf('.') === -1 ? 0 : file.size, lastModified: new Date()})
                 }
@@ -291,7 +291,7 @@
               this.$message.success(this.getPlainObjectName(name) + '已上传完成')
             }
             if (cpt) {
-              let progressData = {progress: parseFloat(p * 100).toFixed(2), fileName: name, uploadId: cpt.uploadId}
+              let progressData = {progress: parseFloat(p * 100).toFixed(2), fileName: this.getPlainObjectName(name), uploadId: cpt.uploadId}
               let index = this.uploadingList.findIndex(v => v.uploadId === cpt.uploadId)
               if (index === -1) {
                 this.uploadingList.push(progressData)
