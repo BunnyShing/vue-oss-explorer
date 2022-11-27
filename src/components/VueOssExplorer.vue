@@ -3,17 +3,16 @@
     <div style="display: flex;margin:0.5rem 0;">
       <el-button icon="el-icon-back" size="mini" style="padding: 0 0.5rem;" v-if="path !== rootPath" @click="back"></el-button>
       <el-button icon="el-icon-refresh" size="mini" style="padding: 0 0.5rem;" @click="refresh"></el-button>
-      <div style="padding: 0.2rem 0rem;margin: 0 0.5rem;">当前目录路径：</div>
+      <div style="align-self:center;margin: 0 0.5rem;">当前目录路径: </div>
       <div
-        style="width: 65%;box-shadow: inset 0 1px 4px rgba(0,0,0,0.2);border-radius: 5px;padding: 0 0.5rem;font-size: 1rem;display: inline-flex;vertical-align: middle;align-items:center;">
+        style="width: 70%;box-shadow: inset 0 0 4px rgba(0,0,0,0.2);border-radius: 5px;padding: 0 0.5rem;font-size: 1rem;display: flex;align-items: center;">
         <el-link @click="path = rootPath"><i class="el-icon-house"></i></el-link>
         <div style="margin: 0 0.4rem;">/</div>
-        <div v-for="(item,index) in path.split('/')" :key="index" style="display: inline-flex;">
-          <el-link
-            @click="path = path.slice(0,path.lastIndexOf(item + '/') + (item + '/').length)">
+        <div v-for="(item,index) in path.split('/')" :key="index" style="display: flex;align-items: center;">
+          <el-link :title="item" @click="path = path.slice(0,path.lastIndexOf(item + '/') + (item + '/').length)">
             {{item}}
           </el-link>
-          <div style="margin: 0 0.4rem;">{{ item ? ' / ' : '' }}</div>
+          <div v-if="item" style="margin: 0 0.4rem;">/</div>
         </div>
       </div>
       <el-popover title="上传列表" trigger="hover">
@@ -282,10 +281,10 @@
           progress: (p, cpt) => {
             if (p >= 1) {
               if (name.startsWith(this.path)) {
-                let newObjectName = this.path + name.replace(this.path,'').split('/')[0];
-                newObjectName += newObjectName.indexOf('.') === -1 ? '/' : '';
+                let newObjectNameArrWithoutPath = name.replace(this.path, '').split('/')
+                let newObjectName = this.path + newObjectNameArrWithoutPath[0] + (newObjectNameArrWithoutPath.length > 1 ? '/' : '');
                 if(this.list.findIndex(v => v.name === newObjectName) === -1){
-                  this.list.unshift({name: newObjectName, size: newObjectName.indexOf('.') === -1 ? 0 : file.size, lastModified: new Date()})
+                  this.list.unshift({name: newObjectName, size: newObjectNameArrWithoutPath.length > 1 ? 0 : file.size, lastModified: new Date()})
                 }
               }
               this.$message.success(this.getPlainObjectName(name) + '已上传完成')
