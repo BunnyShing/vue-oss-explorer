@@ -59,6 +59,9 @@
               <el-button icon="el-icon-edit-outline" size="mini"></el-button>
             </div>
             <el-dropdown-menu slot="dropdown" style="text-align: center">
+              <el-dropdown-item v-if="allowDownload">
+                <el-button @click="download(row.name)" size="mini">下载</el-button>
+              </el-dropdown-item>
               <el-dropdown-item>
                 <el-button @click="rename(row.name)" size="mini">重命名</el-button>
               </el-dropdown-item>
@@ -112,6 +115,11 @@
       },
       // 是否允许删除文件，该参数仅控制前端隐藏按钮。建议开发者定义好STS权限策略，才能真正阻止用户删除操作
       allowDelete: {
+        type: Boolean,
+        default: true,
+      },
+      // 是否允许下载文件/文件夹，该参数仅控制前端隐藏按钮。并且因为浏览器的限制，无法保持文件夹目录结构。
+      allowDownload: {
         type: Boolean,
         default: true,
       },
@@ -391,7 +399,15 @@
       // 递归获取指定目录下的全部对象
       async getDirObjects(objectName, nextMarker) {
         let objects = []
-        let res = await this.ossClient.list({'prefix': objectName, 'max-keys': 1000, 'marker': nextMarker})
+        let res = await this.ossClient
+          .list({'prefix': objectName, 'max-keys': 1000, 'marker': nextMarker})
+          .catch(err => {
+            if (this.$listeners['listObjectsFail']) {
+              this.$emit('listObjectsFail', err);
+            } else {
+              this.$message.error(err.toString())
+            }
+          })
         objects.push(...res.objects.map(v => {
           return v.name
         }))
@@ -430,6 +446,19 @@
       preview(objectFullPath) {
         let previewUrl = this.ossClient.signatureUrl(objectFullPath, {expires: this.previewExpires})
         this.$listeners['previewObject'] ? this.$emit('previewObject', previewUrl) : window.open(previewUrl);
+      },
+      async download(objectFullPath){
+        let downloadTarget = [objectFullPath]
+        if(objectFullPath.endsWith('/')){
+          downloadTarget = await this.getDirObjects(objectFullPath, null)
+        }
+        for(let item of downloadTarget){
+          const response = {
+            'content-disposition': `attachment; `
+          }
+          let downloadUrl = this.ossClient.signatureUrl(item, {expires: this.previewExpires,response})
+          window.open(downloadUrl)
+        }
       },
       back() {
         let backPath = this.path.split('/').slice(0, -2).join('/')
