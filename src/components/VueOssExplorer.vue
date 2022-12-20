@@ -452,11 +452,12 @@
         if(objectFullPath.endsWith('/')){
           downloadTarget = await this.getDirObjects(objectFullPath, null)
         }
-        for(let item of downloadTarget){
+        for (let item of downloadTarget) {
+          if (item.endsWith('/')) continue; // 如果是文件夹对象则跳过，不触发下载
           const response = {
-            'content-disposition': `attachment; `
+              'content-disposition': `attachment; `
           }
-          let downloadUrl = this.ossClient.signatureUrl(item, {expires: this.previewExpires,response})
+          let downloadUrl = this.ossClient.signatureUrl(item, {expires: this.previewExpires, response})
           window.open(downloadUrl)
         }
       },

@@ -42,6 +42,7 @@ root-path | 指定根目录 | String | - | 空
 allow-upload-folder | 是否允许上传文件夹 | Boolean | true/false | true 
 preview-expires | 预览地址过期时间，单位：秒 | Number | - | 86400 
 allow-delete | 是否允许删除文件，该参数仅控制前端隐藏按钮。建议开发者定义好STS权限策略才能真正阻止用户删除操作 | Boolean | true/false | true 
+allow-download | 是否允许下载文件/文件夹，该参数仅控制前端隐藏按钮。并且因为浏览器的限制，无法保持文件夹目录结构 | Boolean | true/false | true 
 before-upload | 自定义上传文件前置函数，入参为上传的文件对象，返回false或返回Promise且被reject，则终止上传 | Function(file) | - | - 
 headers | 上传时的请求头，透传给OSS Client 详见：https://help.aliyun.com/document_detail/383952.html | Object | - | - 
 callback | 异步回调配置，透传给OSS Client 详见：https://help.aliyun.com/document_detail/383952.html | Object | - | -
